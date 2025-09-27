@@ -2,7 +2,7 @@
 
 * **production-token-manager server deployment**
 
-``gcloud functions deploy sandbox-token-manager
+``gcloud functions deploy production-token-manager
 --runtime python312
 --trigger-http
 --entry-point token_manager_handler
