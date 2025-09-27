@@ -1,4 +1,4 @@
-__sandbox-token-manager server deployment__
+#__sandbox-token-manager server deployment__
 
 gcloud functions deploy sandbox-token-manager
 --runtime python312
