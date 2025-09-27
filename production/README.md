@@ -35,3 +35,20 @@
 --project=[GCP_PROJECT_ID]``
 
 
+# Google Secrets Manager Commands
+
+* **List all Google Secrets**
+
+``gcloud secrets list --project=serendia``
+
+* **View specific secret value**
+
+``gcloud secrets versions access latest --secret="[GOOGLE SECRET VALUE]" --project=[GCP_PROJECT_ID]``
+
+
+
+
+
+
+
+
