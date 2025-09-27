@@ -14,13 +14,13 @@ gcloud functions deploy sandbox-token-manager
 * **production-token-refresh server deployment**
 
 
-gcloud functions deploy production-token-refresh
+``gcloud functions deploy production-token-refresh
 --runtime python312
 --trigger-http
 --entry-point scheduled_refresh_handler
 --region=us-central1
 --source .
---project=serendia
+--project=serendia``
 
 * **production-token-refresh job scheduling**
 
