@@ -18,6 +18,7 @@ sandbox-token-manager server deployment command:
     --allow-unauthenticated \
     --region=us-central1 \
     --source .
+    --project=serendia
 
 List all Google Secrets
 
