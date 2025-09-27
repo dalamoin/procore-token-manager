@@ -97,21 +97,19 @@ class TokenManager:
             'code': authorization_code,
             'redirect_uri': self.redirect_uri
         }
+        
+        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
 
         # Debug logging
         logger.info(f"=== TOKEN EXCHANGE DEBUG ===")
         logger.info(f"Environment: {self.environment}")
         logger.info(f"URL: {url}")
-        logger.info(f"Grant type: {data['grant_type']}")
-        logger.info(f"Client ID: {data['client_id'][:10]}...{data['client_id'][-5:]}")
-        logger.info(f"Client secret length: {len(data['client_secret'])}")
-        logger.info(f"Client secret preview: {data['client_secret'][:5]}...{data['client_secret'][-5:]}")
-        logger.info(f"Redirect URI: {data['redirect_uri']}")
+        logger.info(f"Authorization code: {authorization_code[:20]}...{authorization_code[-10:]}")
         logger.info(f"Code length: {len(authorization_code)}")
         
         try:
             logger.info(f"Exchanging authorization code for tokens (sandbox)")
-            response = requests.post(url, data=data, timeout=30)
+            response = requests.post(url, data=data, headers=headers, timeout=30)
 
             logger.info(f"Response status: {response.status_code}")
             logger.info(f"Response headers: {dict(response.headers)}")
@@ -209,9 +207,11 @@ class TokenManager:
             'refresh_token': refresh_token
         }
         
+        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+        
         try:
             logger.info(f"Refreshing Procore access token for sandbox")
-            response = requests.post(url, data=data, timeout=30)
+            response = requests.post(url, data=data, headers=headers, timeout=30)
             
             if response.status_code == 200:
                 token_data = response.json()
