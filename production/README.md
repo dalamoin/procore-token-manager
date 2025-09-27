@@ -11,7 +11,7 @@ gcloud functions deploy sandbox-token-manager
 --source . --project=serendia
 
 
-__production-token-refresh server deployment__
+* **production-token-refresh server deployment**
 
 
 gcloud functions deploy production-token-refresh
@@ -22,7 +22,7 @@ gcloud functions deploy production-token-refresh
 --source .
 --project=serendia
 
-__production-token-refresh job scheduling__
+* **production-token-refresh job scheduling**
 
 gcloud scheduler jobs create http production-token-refresh-job
 --schedule="*/5 * * * *"
