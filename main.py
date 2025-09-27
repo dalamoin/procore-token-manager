@@ -363,9 +363,8 @@ def token_manager_handler(request):
                     <p>Environment: sandbox</p>
                 </body></html>''', 500
         
-        logger.info(f"=== SHOWING HTML INTERFACE (no code parameter) ===")
+        logger.info(f"Showing HTML interface (no code parameter)")
         # Show OAuth interface (no code parameter)
-        # Get current tokens for display
         current_tokens = token_manager.get_current_tokens()
         access_token_preview = current_tokens['access_token'][:10] + '...' if current_tokens['access_token'] else 'None'
         refresh_token_preview = current_tokens['refresh_token'][:10] + '...' if current_tokens['refresh_token'] else 'None'
@@ -406,12 +405,12 @@ def token_manager_handler(request):
                         const result = await response.json();
                         
                         if (result.status === 'success') {{
-                            alert('✅ Tokens refreshed successfully! Refresh this page to see updated tokens.');
+                            alert('Tokens refreshed successfully! Refresh this page to see updated tokens.');
                         }} else {{
-                            alert('❌ Token refresh failed: ' + result.message);
+                            alert('Token refresh failed: ' + result.message);
                         }}
                     }} catch (error) {{
-                        alert('❌ Error calling refresh service: ' + error.message);
+                        alert('Error calling refresh service: ' + error.message);
                     }} finally {{
                         button.disabled = false;
                         button.textContent = 'Manual Refresh Tokens';
@@ -424,7 +423,7 @@ def token_manager_handler(request):
             <div class="info">
                 <h3 style="color: #007bff">Authentication</h3>
                 <a href="{token_manager.get_oauth_url()}" class="button auth-button">
-                    🔐 Authenticate with Procore
+                    Authenticate with Procore
                 </a>
             </div>
             
@@ -436,12 +435,12 @@ def token_manager_handler(request):
                 </div>
                 
                 <button id="refresh-btn" onclick="refreshTokens()" class="button refresh-button">
-                    🔄 Manual Refresh Tokens
+                    Manual Refresh Tokens
                 </button>
             </div>
             
             <div class="disclaimer">
-                <h4>⚡ Automated Token Management</h4>
+                <h4>Automated Token Management</h4>
                 <p>The <code>sandbox-token-refresh</code> service automatically handles access token refresh <strong>every 5 minutes</strong>. 
                 Manual refresh is only needed for testing or immediate token updates.</p>
             </div>
