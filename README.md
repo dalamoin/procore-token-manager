@@ -1,56 +1,46 @@
-sandbox-token-refresh job deployment command:
+# Sandbox Token Manager Deployment Commands
 
-gcloud functions deploy sandbox-token-refresh \
-  --runtime python312 \
-  --trigger-http \
-  --entry-point scheduled_refresh_handler \
-  --region=us-central1 \
-  --source . \
-  --project=serendia
+* **sandbox-token-manager server deployment**
 
-gcloud scheduler jobs create http sandbox-token-refresh-job \
-    --schedule="*/5 * * * *" \
-    --uri="https://us-central1-serendia.cloudfunctions.net/sandbox-token-refresh" \
-    --http-method=POST \
-    --time-zone="America/Chicago" \
-    --location=us-central1 \
-    --oidc-service-account-email="68642982777-compute@developer.gserviceaccount.com" \
-    --oidc-token-audience="https://us-central1-serendia.cloudfunctions.net/sandbox-token-refresh"
+``gcloud functions deploy sandbox-token-manager
+--runtime python312
+--trigger-http
+--entry-point token_manager_handler
+--allow-unauthenticated
+--region=us-central1
+--source . --project=[GCP_PROJECT_ID]``
 
-sandbox-token-manager server deployment command:
 
-  gcloud functions deploy sandbox-token-manager \
-    --runtime python312 \
-    --trigger-http \
-    --entry-point token_manager_handler \
-    --allow-unauthenticated \
-    --region=us-central1 \
-    --source .
-    --project=serendia
+* **sandbox-token-refresh server deployment**
 
-List all Google Secrets
 
-gcloud secrets list --project=serendia
+``gcloud functions deploy sandbox-token-refresh
+--runtime python312
+--trigger-http
+--entry-point scheduled_refresh_handler
+--region=us-central1
+--source .
+--project=[GCP_PROJECT_ID]``
 
-View specific secret value
+* **production-token-refresh job scheduling**
 
-gcloud secrets versions access latest --secret="Google Secret Value" --project=serendia
+``gcloud scheduler jobs create http production-token-refresh-job
+--schedule="*/5 * * * *"
+--uri="https://us-central1-serendia.cloudfunctions.net/production-token-refresh"
+--http-method=POST
+--time-zone="America/Chicago"
+--location=us-central1
+--oidc-service-account-email="68642982777-compute@developer.gserviceaccount.com"
+--oidc-token-audience="https://us-central1-serendia.cloudfunctions.net/production-token-refresh"
+--project=[GCP_PROJECT_ID]``
 
-Add Google Secret
 
-echo "your-new-secret-value" | gcloud secrets versions add SECRET_NAME --data-file=-
+# Google Secrets Manager Commands
 
-Check Logs
+* **List all Google Secrets**
 
-gcloud functions logs read "Service Name" --region=us-central1 --limit=10
+``gcloud secrets list --project=serendia``
 
-Manually call Procore token endpoint:
+* **View specific secret value**
 
-Replace with your actual values from Secret Manager
-
-curl -X POST "https://login-sandbox.procore.com/oauth/token"
--d "grant_type=authorization_code"
--d "client_id=YOUR_CLIENT_ID"
--d "client_secret=YOUR_CLIENT_SECRET"
--d "code=YOUR_CODE"
--d "redirect_uri=YOUR_REDIRECT_URI"
+``gcloud secrets versions access latest --secret="[GOOGLE SECRET VALUE]" --project=[GCP_PROJECT_ID]``
