@@ -18,3 +18,30 @@ sandbox-token-manager server deployment command:
     --allow-unauthenticated \
     --region=us-central1 \
     --source .
+
+List all Google Secrets
+
+gcloud secrets list --project=serendia
+
+View specific secret value
+
+gcloud secrets versions access latest --secret="Google Secret Value" --project=serendia
+
+Add Google Secret
+
+echo "your-new-secret-value" | gcloud secrets versions add SECRET_NAME --data-file=-
+
+Check Logs
+
+gcloud functions logs read "Service Name" --region=us-central1 --limit=10
+
+Manually call Procore token endpoint:
+
+Replace with your actual values from Secret Manager
+
+curl -X POST "https://login-sandbox.procore.com/oauth/token"
+-d "grant_type=authorization_code"
+-d "client_id=YOUR_CLIENT_ID"
+-d "client_secret=YOUR_CLIENT_SECRET"
+-d "code=YOUR_CODE"
+-d "redirect_uri=YOUR_REDIRECT_URI"
