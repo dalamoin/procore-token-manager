@@ -318,9 +318,6 @@ class TokenManager:
 # Cloud Function entry points
 def token_manager_handler(request):
     """HTTP Cloud Function handler for sandbox token management"""
-    print("=== PRINT: HANDLER START ===")
-    logger.info("=== HANDLER START ===")
-    print("=== PRINT: Sandbox token manager handler started ===")
     logger.info("Sandbox token manager handler started")
     
     try:
@@ -328,66 +325,16 @@ def token_manager_handler(request):
         code = None
         error = None
         
-        print("=== PRINT: REQUEST ANALYSIS ===")
-        logger.info("=== REQUEST ANALYSIS ===")
-        # Debug request object
-        print(f"PRINT: Request object type: {type(request)}")
-        logger.info(f"Request object type: {type(request)}")
-        print(f"PRINT: Request attributes: {dir(request)}")
-        logger.info(f"Request attributes: {dir(request)}")
-        print(f"PRINT: Request method: {getattr(request, 'method', 'Unknown')}")
-        logger.info(f"Request method: {getattr(request, 'method', 'Unknown')}")
-        
-        # Parse URL parameters
-        try:
-            print("=== PRINT: URL PARSING ATTEMPT ===")
+        # For Flask requests, use request.args directly
+        if hasattr(request, 'args'):
+            if 'code' in request.args:
+                code = request.args['code']
+                logger.info("OAuth authorization code received")
             
-            # For Flask requests, use request.args directly (most reliable)
-            if hasattr(request, 'args'):
-                print(f"PRINT: Using request.args for parameter extraction")
-                if 'code' in request.args:
-                    code = request.args['code']
-                    print(f"PRINT: OAuth code from request.args: {code[:20]}...{code[-10:] if len(code) > 10 else ''}")
-                
-                if 'error' in request.args:
-                    error = request.args['error']
-                    print(f"PRINT: OAuth error from request.args: {error}")
-                
-                # Debug: show all parameters
-                args_dict = dict(request.args)
-                print(f"PRINT: All request.args: {args_dict}")
-            
-            # Fallback: manual URL parsing (for debugging)
-            elif hasattr(request, 'url') and '?' in str(request.url):
-                print(f"PRINT: Fallback to manual URL parsing")
-                url_str = str(request.url)
-                query_part = url_str.split('?', 1)[1]
-                print(f"PRINT: Query part: {query_part}")
-                
-                # Use proper URL parsing instead of manual string splitting
-                query_params = parse_qs(query_part)
-                print(f"PRINT: Parsed query params: {query_params}")
-                
-                # Extract and URL-decode parameters
-                if 'code' in query_params:
-                    code = query_params['code'][0]
-                    print(f"PRINT: OAuth code found and decoded: {code[:20]}...{code[-10:]}")
-                
-                if 'error' in query_params:
-                    error = query_params['error'][0]
-                    print(f"PRINT: OAuth error found: {error}")
-            else:
-                print("PRINT: No URL parameters found - showing HTML interface")
-                    
-        except Exception as e:
-            print(f"PRINT: URL parsing failed with exception: {e}")
-            import traceback
-            print(f"PRINT: Traceback: {traceback.format_exc()}")
+            if 'error' in request.args:
+                error = request.args['error']
+                logger.error(f"OAuth error received: {error}")
         
-        print(f"=== PRINT: AFTER PARSING: code={code is not None}, error={error} ===")
-        logger.info(f"=== AFTER PARSING: code={code is not None}, error={error} ===")
-        
-        print(f"PRINT: Creating TokenManager for sandbox")
         logger.info(f"Creating TokenManager for sandbox")
         
         # Create TokenManager
@@ -400,8 +347,7 @@ def token_manager_handler(request):
             return f'<html><body><h1>OAuth Error</h1><p>{error}</p></body></html>', 400
         
         if code:
-            logger.info(f"=== PROCESSING OAUTH CALLBACK ===")
-            logger.info(f"Processing OAuth callback for sandbox with code: {code[:20]}...{code[-10:]}")
+            logger.info(f"Processing OAuth callback for sandbox")
             result = token_manager.exchange_code_for_tokens(code)
             
             if result['success']:
@@ -417,7 +363,7 @@ def token_manager_handler(request):
                     <p>Environment: sandbox</p>
                 </body></html>''', 500
         
-        logger.info(f"=== SHOWING HTML INTERFACE (no code parameter) ===")
+        logger.info(f"Showing HTML interface (no code parameter)")
         # Show OAuth interface (no code parameter)
         # Get current tokens for display
         current_tokens = token_manager.get_current_tokens()
