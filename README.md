@@ -1,5 +1,13 @@
 sandbox-token-refresh job deployment command:
 
+gcloud functions deploy sandbox-token-refresh \
+  --runtime python312 \
+  --trigger-http \
+  --entry-point scheduled_refresh_handler \
+  --region=us-central1 \
+  --source . \
+  --project=serendia
+
 gcloud scheduler jobs create http sandbox-token-refresh-job \
     --schedule="*/5 * * * *" \
     --uri="https://us-central1-serendia.cloudfunctions.net/sandbox-token-refresh" \
