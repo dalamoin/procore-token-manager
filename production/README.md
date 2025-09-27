@@ -1,5 +1,16 @@
+__sandbox-token-manager server deployment__
 
-__production-token-refresh job deployment__
+gcloud functions deploy sandbox-token-manager
+--runtime python312
+--trigger-http
+--entry-point token_manager_handler
+--allow-unauthenticated
+--region=us-central1
+--source . --project=serendia
+
+
+__production-token-refresh server deployment__
+
 
 gcloud functions deploy production-token-refresh
 --runtime python312
@@ -9,21 +20,15 @@ gcloud functions deploy production-token-refresh
 --source .
 --project=serendia
 
-gcloud scheduler jobs create http sandbox-token-refresh-job
+__production-token-refresh job scheduling__
+
+gcloud scheduler jobs create http production-token-refresh-job
 --schedule="*/5 * * * *"
---uri="https://us-central1-serendia.cloudfunctions.net/sandbox-token-refresh"
+--uri="https://us-central1-serendia.cloudfunctions.net/production-token-refresh"
 --http-method=POST
 --time-zone="America/Chicago"
 --location=us-central1
 --oidc-service-account-email="68642982777-compute@developer.gserviceaccount.com"
---oidc-token-audience="https://us-central1-serendia.cloudfunctions.net/sandbox-token-refresh"
+--oidc-token-audience="https://us-central1-serendia.cloudfunctions.net/production-token-refresh"
 
-sandbox-token-manager server deployment command:
 
-gcloud functions deploy sandbox-token-manager
---runtime python312
---trigger-http
---entry-point token_manager_handler
---allow-unauthenticated
---region=us-central1
---source . --project=serendia
